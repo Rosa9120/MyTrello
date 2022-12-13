@@ -1,3 +1,8 @@
+<template>
+  <div class="cuadro-tarjeta">
+    <h1>{{ titulo }}</h1>
+  </div>
+</template>
 
 <script setup>
 
@@ -9,15 +14,7 @@ defineProps({
 })
 </script>
 
-<template>
-  <div class="cuadro-tarjeta">
-    <h1>{{ titulo }}</h1>
-  </div>
-</template>
-
 <style scoped>
-
-
 .cuadro-tarjeta{
     background-color: white;
     padding: 6px 6px 2px;

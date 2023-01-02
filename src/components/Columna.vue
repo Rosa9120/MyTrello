@@ -24,6 +24,7 @@ defineProps({
       <Tarjeta titulo="Tarea 3" />
       <Tarjeta titulo="Tarea 3" />
       <Tarjeta titulo="Tarea 3" />
+      <TarjetaVacia> </TarjetaVacia>
     </div>
 
 </div>

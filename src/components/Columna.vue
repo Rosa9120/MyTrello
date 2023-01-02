@@ -1,32 +1,9 @@
-
-<script setup>
-import Tarjeta from './Tarjeta.vue'
-
-defineProps({
-  msg: {
-    type: String,
-    required: true
-  }
-})
-</script>
-
 <template>
   <div class="columna">
     <h1 class="titulo-columna">{{ msg }}</h1>
     <div class="tarjetas">
-      <Tarjeta titulo="Tarea 1" />
-      <Tarjeta titulo="Tarea 2" />
-      <Tarjeta titulo="Tarea 3" />
-      <Tarjeta titulo="Tarea 3" />
-      <Tarjeta titulo="Tarea 3" />
-      <Tarjeta titulo="Tarea 3" />
-      <Tarjeta titulo="Tarea 3" />
-      <Tarjeta titulo="Tarea 3" />
-      <Tarjeta titulo="Tarea 3" />
-      <Tarjeta titulo="Tarea 3" />
-      <TarjetaVacia> </TarjetaVacia>
+      <Tarjeta v-for="tarjeta in tarjetas" :key="tarjeta.id" :titulo="tarjeta.nombre"/>
     </div>
-
 </div>
 </template>
 
@@ -65,3 +42,32 @@ defineProps({
   }
 }
 </style>
+
+<script setup>
+import Tarjeta from '/src/components/Tarjeta.vue'
+import { onMounted, ref } from 'vue'
+import axios from 'axios'
+
+const props = defineProps({
+  msg: {
+    type: String,
+    required: true
+  },
+  id: {
+    type: Number,
+    required: true
+  }
+})
+
+const tarjetas = ref([])
+
+onMounted(async () => {
+  await axios.get('http://localhost:3000/tableros/1/columnas/' + props.id + '/tarjetas')
+    .then((response) => {
+      tarjetas.value = response.data.tarjetas
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+})
+</script>

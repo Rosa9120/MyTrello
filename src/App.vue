@@ -1,12 +1,14 @@
+
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import Tablero from './components/Tablero.vue'
+    import Navbar from '/src/components/Navbar.vue'
 </script>
 
 <template>
-    <tablero nombreTablero="Tablero: TAES" />
+    <div id="app">
+        <Navbar></Navbar>
+        <router-view></router-view>
+    </div>
 </template>
 
 <style scoped>
-
 </style>

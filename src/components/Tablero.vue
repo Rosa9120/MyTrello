@@ -21,6 +21,7 @@ defineProps({
 const columnas = ref([])
 
 onMounted(async () => {
+  console.log("hola")
   await axios.get('http://localhost:3000/tableros/1/columnas')
     .then((response) => {
       columnas.value = response.data.columnas
@@ -29,6 +30,7 @@ onMounted(async () => {
       console.log(error)
     })
 })
+
 </script>
 
 <style scoped>

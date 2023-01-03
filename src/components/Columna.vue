@@ -29,11 +29,9 @@
     margin-right: 4px;
 
 }
-
 .tarjetas{
   overflow-x:hidden;
 }
-
 
 @media (min-width: 1024px) {
   .cuadro h1,
@@ -64,6 +62,7 @@ const tarjetas = ref([])
 onMounted(async () => {
   await axios.get('http://localhost:3000/tableros/1/columnas/' + props.id + '/tarjetas')
     .then((response) => {
+      console.log(response.data)
       tarjetas.value = response.data.tarjetas
     })
     .catch((error) => {

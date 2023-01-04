@@ -18,7 +18,7 @@ onMounted(async () => {
 
 <template>
     <div class="tableros">
-        <li v-for="tablero in tableros" :key="tablero.id" :nombreTablero="tablero.nombre"> {{ tablero.nombre }}</li>
+        <li v-for="tablero in tableros" :key="tablero.id" :nombreTablero="tablero.nombre" > {{ tablero.nombre }}</li>
     </div>
 </template>
 

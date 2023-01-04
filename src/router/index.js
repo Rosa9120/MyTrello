@@ -20,7 +20,8 @@ const router = createRouter({
     {
       path: '/tablero/:id',
       name: 'tablero',
-      component: () => import('../components/Tablero.vue')
+      props:true,
+      component: () => import('../views/TableroView.vue')
     },
   ]
 })

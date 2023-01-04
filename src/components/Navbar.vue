@@ -10,7 +10,9 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item href="#">Sobre nosotros</b-nav-item>
+        <b-nav-item>
+            <router-link class="custom-link" to="/about">Sobre nosotros</router-link>
+        </b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->

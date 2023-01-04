@@ -1,6 +1,6 @@
 <template>
   <div class="columna">
-    <h1 class="titulo-columna">{{ msg }}</h1>
+    <h1 class="titulo-columna">{{ titulo }}</h1>
     <div class="tarjetas">
       <Tarjeta v-for="tarjeta in tarjetas" :key="tarjeta.id" :titulo="tarjeta.nombre"/>
     </div>
@@ -33,26 +33,25 @@
   overflow-x:hidden;
 }
 
-@media (min-width: 1024px) {
-  .cuadro h1,
-  .cuadro h3 {
-    text-align: left;
-  }
-}
 </style>
 
 <script setup>
 import Tarjeta from '/src/components/Tarjeta.vue'
+
 import { onMounted, ref } from 'vue'
 import axios from 'axios'
 
 const props = defineProps({
-  msg: {
+  titulo: {
     type: String,
     required: true
   },
   id: {
     type: Number,
+    required: true
+  },
+  tableroId: {
+    type: String,
     required: true
   }
 })
@@ -60,7 +59,7 @@ const props = defineProps({
 const tarjetas = ref([])
 
 onMounted(async () => {
-  await axios.get('http://localhost:3000/tableros/1/columnas/' + props.id + '/tarjetas')
+  await axios.get('http://localhost:3000/tableros/' + props.tableroId + '/columnas/' + props.id + '/tarjetas')
     .then((response) => {
       console.log(response.data)
       tarjetas.value = response.data.tarjetas

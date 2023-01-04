@@ -18,8 +18,38 @@ onMounted(async () => {
 
 <template>
     <div class="tableros">
-        <li v-for="tablero in tableros" :key="tablero.id" :nombreTablero="tablero.nombre" > {{ tablero.nombre }}</li>
+      <b-card-group deck>
+        <span v-for="tablero in tableros" :key="tablero.id"> 
+          <div>
+              <b-card
+                img-src="https://picsum.photos/600/300/?image=25"
+                img-top
+                tag="article"
+                style="max-width: 20rem;"
+                class="mb-2"
+              >
+                <b-card-title> {{ tablero.nombre }} </b-card-title>
+                <b-card-text>
+                  Tablero creado por QUIEN SEA
+                  o quiza la fecha de creacion
+                  o quiza meterle descripcion al tablero
+                  yo en la foto pondría la foto de background que tiene cada tablero. y si no tiene, pues un color aleatorio
+                </b-card-text>
+
+                <router-link :to="{ name: 'tablero', params: { id: tablero.id }}" custom v-slot="{ navigate }">
+                  <b-button @click="navigate" role="link" variant="primary"> Ver tablero </b-button>
+                </router-link>
+              </b-card>
+            </div>
+          </span>
+      </b-card-group>
     </div>
 </template>
 
 
+<style lang="scss">
+.tableros{
+    margin: 5vh;
+}
+
+</style>

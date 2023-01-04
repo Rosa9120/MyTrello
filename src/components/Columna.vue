@@ -3,6 +3,7 @@
     <h4 class="titulo-columna">{{ titulo }}</h4>
     <div class="tarjetas">
       <Tarjeta v-for="tarjeta in tarjetas" :key="tarjeta.id" :titulo="tarjeta.nombre"/>
+      <TarjetaVacia/>
     </div>
 </div>
 </template>
@@ -45,6 +46,7 @@
 
 <script setup>
 import Tarjeta from '/src/components/Tarjeta.vue'
+import TarjetaVacia from '/src/components/TarjetaVacia.vue'
 
 import { onMounted, ref } from 'vue'
 import axios from 'axios'

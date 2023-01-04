@@ -1,6 +1,8 @@
 <script setup>
 
 import Columna from '/src/components/Columna.vue'
+import ColumnaVacia from '/src/components/ColumnaVacia.vue'
+
 import { onMounted, ref } from 'vue'
 import axios from 'axios'
 
@@ -44,6 +46,7 @@ onMounted(async () => {
 <h3 class="titulo"> Tablero {{ nombre }} </h3>
 <div class="cuadro">
     <Columna v-for="columna in columnas" :key="columna.id" :titulo="columna.titulo" :id="columna.id" :tableroId="props.id" />
+    <ColumnaVacia/>
 </div>
 </template>
 

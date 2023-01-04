@@ -1,6 +1,6 @@
 <template>
   <div class="columna">
-    <h1 class="titulo-columna">{{ titulo }}</h1>
+    <h4 class="titulo-columna">{{ titulo }}</h4>
     <div class="tarjetas">
       <Tarjeta v-for="tarjeta in tarjetas" :key="tarjeta.id" :titulo="tarjeta.nombre"/>
     </div>
@@ -9,11 +9,13 @@
 
 <style scoped>
 
-.titulo-columna{
-  background-color: #EBECF0;
-    opacity: 0.6;
+  .titulo-columna{
+    font-style: helvetica;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
     width: 200px;
-    color:black;
+    color: #172b4d !important;
     text-align: center;
 }
 
@@ -23,12 +25,18 @@
     width: 272px;
     display:flex;
     flex-flow: column;
+
     padding: 10px;
     margin-bottom: 8px;
+
+    height: max-content;
+
     margin-left: 4px;
     margin-right: 4px;
-
+    border-radius: 0.375rem;
 }
+
+
 .tarjetas{
   overflow-x:hidden;
 }

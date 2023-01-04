@@ -40,20 +40,33 @@ onMounted(async () => {
 
 
 <template>
+
+<h3 class="titulo"> Tablero {{ nombre }} </h3>
 <div class="cuadro">
-    <h1 class="green">{{ nombre }} </h1>
     <Columna v-for="columna in columnas" :key="columna.id" :titulo="columna.titulo" :id="columna.id" :tableroId="props.id" />
 </div>
 </template>
 
 <style>
 
+html,body{
+    height:100%;
+    margin:0;
+    padding:0;
+}
+
+#app{
+    height:100%;
+    display:flex;
+    flex-flow: column;
+    background-color: whitesmoke;
+}
+
 .cuadro{
     background-color: whitesmoke;
     display:flex;
     flex-flow: row;
-    margin-top: 5vh;
-    height: 95vh;
+    flex-grow: 1;
 }
 
 .cuadro h1{

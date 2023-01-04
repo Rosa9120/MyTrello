@@ -19,9 +19,10 @@ defineProps({
     background-color: white;
     padding: 6px 6px 2px;
     align-self: center;
-    min-width:256px;
+    min-width:250px;
     min-height: 32px;
     margin-bottom:8px;
+    border-radius: 0.375rem;
 }
 
 

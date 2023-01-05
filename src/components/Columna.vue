@@ -3,7 +3,7 @@
     <h4 class="titulo-columna" :id="'titulo-columna-' + id" style="pointer-events: none;">{{ titulo }}</h4>
     <div class="tarjetas" :id="'tarjetas-columna-' + id">
       <Tarjeta v-for="tarjeta in tarjetas" :key="tarjeta.id" :titulo="tarjeta.nombre" :id="tarjeta.id" :columnaId="id"/>
-      <TarjetaVacia/>
+      <TarjetaVacia v-on:newTaskEvent="updateTasks" :columnaId="id" :tableroId="tableroId"/>
     </div>
 </div>
 </template>
@@ -66,7 +66,7 @@ const props = defineProps({
     required: true
   },
   tableroId: {
-    type: String,
+    type: Number,
     required: true
   }
 })
@@ -74,6 +74,12 @@ const props = defineProps({
 const parentColumna = ref(null)
 
 const contadorElementos = ref(0)
+
+const tarjetas = ref([])
+
+const updateTasks = (tarjeta) => {
+  tarjetas.value.push(tarjeta)
+}
 
 const dragEnter = (e) => {
   contadorElementos.value += 1
@@ -124,8 +130,6 @@ const drop = (e) => {
       console.log(error)
     })
 }
-
-const tarjetas = ref([])
 
 onMounted(async () => {
   await axios.get('http://localhost:3000/tableros/' + props.tableroId + '/columnas/' + props.id + '/tarjetas')

@@ -22,7 +22,6 @@
 
 .columna{
     background-color: #EBECF0;
-    opacity: 0.6;
     width: 272px;
     display:flex;
     flex-flow: column;

@@ -1,5 +1,82 @@
 <script setup>
+import { ref, onMounted, watch } from 'vue'
+import axios from 'axios'
+import { computed } from 'vue'
+
+const username = ref('')
+const email = ref('')
+const password = ref('')
+
+const valid = ref(false)
+
+var re = /\S+@\S+\.\S+/
+
+watch(username, (newValue, oldValue) => {
+    if (username.value.length > 0 && password.value.length > 4 && re.test(email.value)) {
+        valid.value = true
+    } else {
+        valid.value = false
+    }
+})
+
+watch(password, (newValue, oldValue) => {
+    if (username.value.length > 0 && password.value.length > 4 && re.test(email.value)) {
+        valid.value = true
+    } else {
+        valid.value = false
+    }
+})
+
+watch(email, (newValue, oldValue) => {
+    if (username.value.length > 0 && password.value.length > 4 && re.test(email.value)) {
+        valid.value = true
+    } else {
+        valid.value = false
+    }
+})
+
+const validation = computed(() => {
+    return password.value.length > 4
+})
+
+const showDismissibleAlert = ref(false)
+
+const registrar = () => {
+    console.log(username.value)
+    // Create a new task
+    axios.post('http://localhost:3000/usuarios/', {
+    nombre: username.value,
+    email: email.value,
+    password: password.value
+    })
+    .then((response) => {
+        console.log(response)
+        if (response.data.cod == 400) {
+            showDismissibleAlert.value = true
+        }
+    })
+    .catch((error) => {
+        console.log(error)
+        if (error.response) {
+        // Request made and server responded
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        showDismissibleAlert.value = true
+        } else if (error.request) {
+        // The request was made but no response was received
+        console.log(error.request);
+        } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+        }
+
+    })
+    
+}
+
 </script>
+
 
 <template>
     <div id="login">
@@ -7,35 +84,36 @@
         <b-form class="custom-login">
 
             <b-form-group class="input-custom"  id="input-group-2" label="Nombre de usuario" label-for="input-2">
-                <b-form-input id="input-2" v-model="username"  placeholder="Nombre de usuario" :state="validation"  required> </b-form-input>
-                <b-form-invalid-feedback :state="validation" >
-                    El nombre de usuario debe tener entre 5 y 12 caracteres.
-                </b-form-invalid-feedback>
-                <b-form-valid-feedback :state="validation" >
-                    El nombre de usuario es válido.
-                </b-form-valid-feedback>
+                <b-form-input id="input-2" v-model="username" placeholder="Nombre de usuario"  required> </b-form-input>
+                <b-form-invalid-feedback
+                id="input-2"> This is a required field and must be at least 3 characters. </b-form-invalid-feedback>
             </b-form-group>
 
 
             <b-form-group class="input-custom" id="input-group-3" label="Correo electrónico" label-for="input-3">
                 <b-form-input id="input-3" type="email" v-model="email" placeholder="Correo electrónico" required> </b-form-input>
-                <b-form-invalid-feedback :state="validationEmail" >
-                    El correo electronico debe sder bonito
-                </b-form-invalid-feedback>
-                <b-form-valid-feedback :state="validationEmail" >
-                    El nombre de usuario es válido.
-                </b-form-valid-feedback>
+                <b-form-invalid-feedback id="input-3">This is a required field.</b-form-invalid-feedback>
             </b-form-group>
 
             <b-form-group  class="input-custom" id="input-group-4" label="Contraseña:" label-for="input-4">
-                <b-form-input id="input-4" type="password" placeholder="Contraseña" required> </b-form-input>
+                <b-form-input id="input-4" type="password" v-model="password" :state="validation"  placeholder="Contraseña" required> </b-form-input>
+                <b-form-invalid-feedback :state="validation">
+                    La contraseña debe tener un mínimo de 5 caracteres.
+                </b-form-invalid-feedback>
+                <b-form-valid-feedback :state="validation">
+                    La contraseña es válida
+                </b-form-valid-feedback>
             </b-form-group>
 
-            <b-button type="submit" variant="primary" > Regístrate </b-button>
+            <b-button type="submit" variant="primary" @click="registrar" :disabled="!valid"> Regístrate </b-button>
+
+
 
         </b-form>
 
-
+        <b-alert v-model="showDismissibleAlert" variant="danger" dismissible>
+            Este correo ya está siendo usado por otro usuario. 
+            </b-alert>
     </div>
     
 </template>
@@ -72,21 +150,3 @@ html,body{
 }
 
 </style>
-
-<script>
-  export default {
-    data() {
-      return {
-        username: '',
-        email: ''
-      }
-    },
-    computed: {
-      validation() {
-        return this.username.length > 4 && this.username.length < 13
-      },
-      validationEmail() {
-        return this.email.length > 4 && this.email.length < 10}
-    }
-  }
-</script>

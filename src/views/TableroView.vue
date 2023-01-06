@@ -61,12 +61,14 @@ onMounted(async () => {
 
 html,body{
     height:100%;
+    width: 100%;
     margin:0;
     padding:0;
 }
 
 #app{
     height:100%;
+    width: 100%;
     display:flex;
     flex-flow: column;
     background-color: whitesmoke;
@@ -77,6 +79,7 @@ html,body{
     display:flex;
     flex-flow: row;
     flex-grow: 1;
+    width: 100%;
 }
 
 .cuadro h1{

@@ -47,16 +47,23 @@ const newTask = (e) => {
 </script>
 
 <template>
-
-  <b-form-input
-      :id="'inline-form-input-name-' + columnaId"
-      class="mb-2 me-sm-2 mb-sm-0"
-      placeholder="Añade una tarjeta"
-      debounce="500" 
-      @keydown.enter="newTask"
-      v-model="newTaskText"
-  ></b-form-input>
+  <div class="cuadro-tarjeta"> 
+    <b-form-input
+        :id="'inline-form-input-name-' + columnaId"
+        class="mb-2 me-sm-2 mb-sm-0"
+        placeholder="Añade una tarjeta"
+        debounce="500" 
+        @keydown.enter="newTask"
+        v-model="newTaskText"
+    ></b-form-input>
+  </div>
 
 </template>
+
+<style scoped>
+  .cuadro-tarjeta{
+    min-width:250px;
+  }
+</style>
 
 

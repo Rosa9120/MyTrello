@@ -60,6 +60,7 @@ const newColumn = (e) => {
   .columna{
       background-color: #EBECF0;
       width: 272px;
+      min-width: 250px;
       display:flex;
       flex-flow: column;
   

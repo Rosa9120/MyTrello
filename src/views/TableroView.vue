@@ -85,8 +85,7 @@ html,body{
     background-color: whitesmoke;
     display:flex;
     flex-flow: row;
-
-
+    margin: 0px 12px 0px 12px;
 }
 
 .cuadro h1{

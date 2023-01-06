@@ -110,6 +110,7 @@ const dragLeave = (e) => {
 }
 
 const drop = (e) => {
+  e.preventDefault()
   contadorElementos.value = 0
   parentColumna.value.classList.remove('drag-over')
   let id = e.dataTransfer.getData('text/plain')

@@ -2,7 +2,7 @@
   <div class="columna" :id="'columna-' + id" @dragenter="dragEnter" @dragover="dragOver" @dragleave="dragLeave" @drop="drop">
     <h4 class="titulo-columna" :id="'titulo-columna-' + id" style="pointer-events: none;">{{ titulo }}</h4>
     <div class="tarjetas" :id="'tarjetas-columna-' + id">
-      <Tarjeta v-for="tarjeta in tarjetas" :key="tarjeta.id" :titulo="tarjeta.nombre" :id="tarjeta.id" :columnaId="id"/>
+      <Tarjeta v-for="tarjeta in tarjetas" :key="tarjeta.id" :titulo="tarjeta.nombre" :descripcion="tarjeta.descripcion" :id="tarjeta.id" :columnaId="id"/>
       <TarjetaVacia v-on:newTaskEvent="updateTasks" :columnaId="id" :tableroId="tableroId"/>
     </div>
 </div>

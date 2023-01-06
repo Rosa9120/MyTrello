@@ -18,6 +18,11 @@ onMounted(async () => {
 
 <template>
     <div class="tableros">
+      <div class="buscador"> 
+        <b-form-input lass="mr-sm-2" style="width:40%" placeholder="Nombre del tablero"></b-form-input>
+        <b-button class="my-2 my-sm-0" type="submit">Buscar</b-button>
+      </div>
+
       <b-card-group deck>
         <span v-for="tablero in tableros" :key="tablero.id"> 
           <div>
@@ -50,6 +55,15 @@ onMounted(async () => {
 <style lang="scss">
 .tableros{
     margin: 5vh;
+    display:flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.buscador{
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content: center;
 }
 
 </style>

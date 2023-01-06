@@ -101,7 +101,7 @@ html,body{
 .layout{
     display:flex;
     flex-flow: column wrap;
-    align-items:center;
+    align-items:start;
     height:100%;
     width: 100% !important;
     overflow-x:scroll;

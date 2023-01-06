@@ -13,7 +13,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Gestión de la tarjeta</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" id="closeButton" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div class="modal-body">
@@ -23,13 +23,12 @@
             <b> Título: </b> {{titulo}} <br>
             <b> Descripcion: </b> {{descripcion}} <br>
             <b> Creado por: </b> <br>
-            <b> Fecha límite:</b>  <br>
-            mas cosas
+            <b> Fecha límite:</b> {{ fechaVencimiento }} <br>
           </b-tab>
           <b-tab title="Editar">
-            <b> Título: </b> <input type="text" class="form-control" :value=titulo> <br>
-            <b> Descripcion: </b> <b-form-textarea class="form-control" :value=descripcion> </b-form-textarea> <br>
-            <b> Fecha límte CUIDAO TODAVIA NO EXISTE: </b> <input type="date" class="form-control" :value=titulo> <br>
+            <b> Título: </b> <input type="text" class="form-control" v-model="newTitulo"> <br>
+            <b> Descripcion: </b> <b-form-textarea class="form-control" v-model="newDescripcion"> </b-form-textarea> <br>
+            <b> Fecha límte: </b> <input type="date" class="form-control" v-model="newFechaVencimiento"> <br>
           </b-tab>
 
         </b-tabs>
@@ -37,7 +36,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Borrar tarjeta</button>
-          <button type="button" class="btn btn-primary">Guardar los cambios</button>
+          <button type="button" @click.prevent="guardarCambios" class="btn btn-primary">Guardar los cambios</button>
         </div>
       </div>
     </div>
@@ -48,9 +47,15 @@
 
 <script setup>
 import { onMounted } from "@vue/runtime-core"
+import axios from "axios"
+import { ref } from "vue"
 
-  defineProps({
+const props = defineProps({
     titulo: {
+      type: String,
+      required: true
+    },
+    tableroId: {
       type: String,
       required: true
     },
@@ -65,8 +70,20 @@ import { onMounted } from "@vue/runtime-core"
     columnaId: {
       type: Number,
       required: true
+    },
+    fechaVencimiento: {
+      type: String,
+      required: false
     }
   })
+
+  const titulo = ref(props.titulo)
+  const descripcion = ref(props.descripcion)
+  const fechaVencimiento = ref(props.fechaVencimiento)
+
+  const newTitulo = ref(props.titulo)
+  const newDescripcion = ref('')
+  const newFechaVencimiento = ref('')
 
   const dragStart = (e) => {
     e.dataTransfer.setData('text/plain', e.target.id)
@@ -81,6 +98,40 @@ import { onMounted } from "@vue/runtime-core"
 
   const dragEnd = (e) => {
     e.target.classList.remove('hide')
+  }
+
+  const guardarCambios = () => {
+    // Remove whitespace from the beginning and end of the string
+    newTitulo.value = newTitulo.value.trim()
+    newDescripcion.value = newDescripcion.value.trim()
+    newFechaVencimiento.value = newFechaVencimiento.value.trim()
+
+    if (newFechaVencimiento.value != '') {
+      const datos = newFechaVencimiento.value.split('-')
+
+      newFechaVencimiento.value = datos[2] + '-' + datos[1] + '-' + datos[0]
+    } else {
+      newFechaVencimiento.value = props.fechaVencimiento
+    }
+
+    if (newDescripcion.value == '') {
+      newDescripcion.value = props.descripcion
+    }
+
+    axios.put('http://localhost:3000/tableros/' + props.tableroId + '/columnas/' + props.columnaId + '/tarjetas/' + props.id, {
+      nombre: newTitulo.value,
+      descripcion: newDescripcion.value,
+      fechaVencimiento: newFechaVencimiento.value
+    }).then((response) => {
+      titulo.value = response.data.tarjeta.nombre
+      descripcion.value = response.data.tarjeta.descripcion
+      fechaVencimiento.value = response.data.tarjeta.fechaVencimiento
+
+      const closeButton = document.getElementById('closeButton')
+      closeButton.click()
+    }).catch((error) => {
+      console.log(error)
+    })
   }
 
 </script>

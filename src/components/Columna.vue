@@ -30,7 +30,7 @@
     margin-bottom: 8px;
 
     height: max-content;
-
+    max-height: 80vh;
     margin-left: 4px;
     margin-right: 20px;
     border-radius: 0.375rem;

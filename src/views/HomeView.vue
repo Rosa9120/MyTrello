@@ -1,23 +1,5 @@
-<script setup>
-import { onMounted, ref } from 'vue'
-import axios from 'axios'
-
-const tableros = ref([])
-
-onMounted(async () => {
-  await axios.get('http://localhost:3000/tableros/')    //EN EL FUTURO SERÁ USUARIO/TABLEROS PARA OBTENER LOS TABLEROS DEL USUARIO QUE HA INICIADO SEISON
-    .then((response) => {
-      tableros.value = response.data.tableros
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-})
-
-</script>
-
 <template>
-    <div class="tableros">
+    <div class="tableros" v-if="loaded">
       <div class="crud"> 
         <div></div>
         <div class="buscador"> 
@@ -88,13 +70,13 @@ onMounted(async () => {
           </div>
 
           <div class="modal-body">
-            <b> Nombre: </b> <input type="text" required class="form-control" > <br>
+            <b> Nombre: </b> <input type="text" v-model="nuevoNombreTablero" required class="form-control" > <br>
             <b> Descripcion: </b> <b-form-textarea class="form-control" > </b-form-textarea> <br>
             <b> Imagen de fondo: </b> <input type="file" accept='image/*' class="form-control" > <br>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            <button type="button" class="btn btn-primary">Guardar los cambios</button>
+            <button type="button" class="btn btn-secondary" id="btn-close-modal" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary" @click.prevent="crearTablero">Guardar los cambios</button>
           </div>
         </div>
       </div>
@@ -103,6 +85,65 @@ onMounted(async () => {
     </div>
 </template>
 
+<script setup>
+import { onMounted, ref } from 'vue'
+import axios from 'axios'
+import { useLoginStore } from '../stores/login';
+import router from '../router';
+
+const tableros = ref([])
+
+const nuevoNombreTablero = ref('')
+
+const loginStore = useLoginStore()
+
+const crearTablero = async () => {
+  await axios.post('http://localhost:3000/tableros/', {
+    nombre: nuevoNombreTablero.value
+  }, {
+    headers: {
+      'Authorization': 'Bearer ' + loginStore.token
+    }
+  })
+    .then(async (response) => {
+      await axios.get('http://localhost:3000/tableros/')    //EN EL FUTURO SERÁ USUARIO/TABLEROS PARA OBTENER LOS TABLEROS DEL USUARIO QUE HA INICIADO SEISON
+      .then((response) => {
+        tableros.value = response.data.tableros
+        const closeButton = document.getElementById('btn-close-modal')
+        closeButton.click()
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+const loaded = ref(false)
+
+onMounted(async () => {
+  loginStore.updateToken()
+  loginStore.updateUser()
+
+  if (!loginStore.token) {
+    router.push('/login')
+    return
+  }
+
+  loaded.value = true
+
+  await axios.get('http://localhost:3000/tableros/')    //EN EL FUTURO SERÁ USUARIO/TABLEROS PARA OBTENER LOS TABLEROS DEL USUARIO QUE HA INICIADO SEISON
+    .then((response) => {
+      tableros.value = response.data.tableros
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+})
+
+</script>
 
 <style lang="scss">
 

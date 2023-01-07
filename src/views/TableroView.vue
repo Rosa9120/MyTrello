@@ -46,16 +46,16 @@ onMounted(async () => {
 
 
 <template>
-
-
+<div>
   <h3 class="titulo"> Tablero {{ nombre }} </h3>
+
   <div class="layout">
-  <div class="cuadro">
-      <Columna v-for="columna in columnas" :key="columna.id" :titulo="columna.titulo" :id="columna.id" :tableroId="props.id" />
-      <ColumnaVacia v-on:newColumnEvent="updateColumns" :tableroId="props.id"/>
+    <div class="cuadro">
+        <Columna v-for="columna in columnas" :key="columna.id" :titulo="columna.titulo" :id="columna.id" :tableroId="props.id" />
+        <ColumnaVacia v-on:newColumnEvent="updateColumns" :tableroId="props.id"/>
+    </div>
   </div>
 </div>
-
 </template>
 
 <style>
@@ -104,7 +104,7 @@ html,body{
     align-items:start;
     height:100%;
     width: 100% !important;
-    overflow-x:scroll;
+    overflow-x:auto;
 }
 
 </style>

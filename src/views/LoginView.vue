@@ -14,6 +14,10 @@
         </b-form>
 
         <b-button type="submit" variant="primary" @click.prevent="login">Iniciar sesión</b-button>
+
+        <b-alert v-model="showDismissibleAlert" variant="danger" dismissible>
+            Los datos introducidos no coinciden con ningun usuario!
+        </b-alert>
     </div>
     
 </template>
@@ -26,6 +30,8 @@ import router from "../router";
 
 const email = ref(null)
 const password = ref(null)
+
+const showDismissibleAlert = ref(false)
 
 const loginStore = useLoginStore()
 
@@ -40,9 +46,9 @@ const login = async () => {
         loginStore.updateUser()
         router.push("/")
     }).catch((error) => {
+        showDismissibleAlert.value = true
         console.log('Los datos introducidos no coinciden con ningun usuario')
     })
-    loginStore.updateUser()
 }
 
 onMounted(() => {

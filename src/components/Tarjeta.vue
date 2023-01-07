@@ -2,7 +2,7 @@
   <div class="cuadro-tarjeta" :id="'cuadro-tarjeta-' + columnaId + '-' + id" draggable="true" @dragstart="dragStart" @dragend="dragEnd">
     <div class="interior">
       <h1>{{ titulo }}</h1>
-      <button class="botones" type="button" data-bs-toggle="modal" :data-bs-target="'#exampleModal-' + id ">
+      <button class="botones-braile" type="button" data-bs-toggle="modal" :data-bs-target="'#exampleModal-' + id ">
         ⠇
       </button>
     </div>
@@ -167,7 +167,7 @@ const props = defineProps({
   justify-content: space-between;
 }
 
-.botones{
+.botones-braile{
   background-color: white;
   border: 0px;
   cursor: pointer;

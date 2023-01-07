@@ -2,12 +2,15 @@
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 import { computed } from 'vue'
+import router from '../router'
+import { useLoginStore } from '../stores/login'
 
 const username = ref('')
 const email = ref('')
 const password = ref('')
 
 const valid = ref(false)
+const loginStore = useLoginStore()
 
 var re = /\S+@\S+\.\S+/
 
@@ -53,6 +56,8 @@ const registrar = () => {
         console.log(response)
         if (response.data.cod == 400) {
             showDismissibleAlert.value = true
+        } else if (response.status == 200) {
+            router.push('/login')
         }
     })
     .catch((error) => {
@@ -72,8 +77,16 @@ const registrar = () => {
         }
 
     })
-    
 }
+
+onMounted(() => {
+    loginStore.updateUser()
+    loginStore.updateToken()
+
+    if (loginStore.user) {
+        router.push("/")
+    }
+})
 
 </script>
 

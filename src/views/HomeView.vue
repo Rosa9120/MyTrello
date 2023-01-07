@@ -44,15 +44,17 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
 
-                  <div class="modal-body">
-                    <b> Nombre: </b> <input type="text" required class="form-control" v-model="nuevoNombreTableroEditar"> <br>
-                    <b> Descripcion: </b> <b-form-textarea class="form-control"  v-model="nuevaDescripcionTableroEditar"> </b-form-textarea> <br>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="btn-close-modal-editar"  data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click.prevent="borrarTablero(tablero.id)" >Borrar tablero</button>
-                    <button type="button" class="btn btn-primary"  data-bs-dismiss="modal"  @click.prevent="editarTablero(tablero.id)"> Guardar los cambios</button>
-                  </div>
+                  <b-form>
+                    <div class="modal-body">
+                      <b> Nombre: </b> <b-form-input type="text" class="form-control" v-model="nuevoNombreTableroEditar" required> </b-form-input> <br>
+                      <b> Descripcion: </b> <b-form-textarea class="form-control"  v-model="nuevaDescripcionTableroEditar"> </b-form-textarea> <br>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" id="btn-close-modal-editar"  data-bs-dismiss="modal">Cerrar</button>
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click.prevent="borrarTablero(tablero.id)" >Borrar tablero</button>
+                      <button class="btn btn-primary" type="submit" data-bs-dismiss="modal"  @click.prevent="editarTablero(tablero.id)"> Guardar los cambios</button>
+                    </div>
+                  </b-form>
                 </div>
           </div>
           </div>

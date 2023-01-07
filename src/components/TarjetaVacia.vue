@@ -5,6 +5,9 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { defineEmits } from 'vue';
 import { defineProps } from 'vue';
+import { useLoginStore } from '../stores/login';
+
+const loginStore = useLoginStore()
 
 const emits = defineEmits(['newTaskEvent'])
 
@@ -32,6 +35,10 @@ const newTask = (e) => {
       nombre: text,
       idtablero: props.tableroId,
       idcolumna: props.columnaId
+    },{
+      headers: {
+      'Authorization': 'Bearer ' + loginStore.token
+      }
     })
     .then((response) => {
       nuevaTarjeta.value = response.data.tarjeta

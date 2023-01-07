@@ -4,6 +4,9 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { defineEmits } from 'vue';
 import { defineProps } from 'vue';
+import { useLoginStore } from '../stores/login';
+
+const loginStore = useLoginStore()
 
 const emits = defineEmits(['newColumnEvent'])
 
@@ -25,7 +28,10 @@ const newColumn = (e) => {
     // Create a new task
     axios.post('http://localhost:3000/tableros/' + props.tableroId + '/columnas', {
       titulo: text,
-    })
+    },{
+      headers: {
+      'Authorization': 'Bearer ' + loginStore.token
+      }})
     .then((response) => {
       nuevaColumna.value = response.data.columna
       console.log(nuevaColumna.value)

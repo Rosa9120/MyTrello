@@ -105,6 +105,10 @@ const drop = (e) => {
   const tarjeta_id = id.split('-')[3]
   axios.patch('http://localhost:3000/tableros/' + props.tableroId + '/columnas/' + columna_id + '/tarjetas/' + tarjeta_id, {
     columna: props.id
+  },{
+    headers: {
+      'Authorization': 'Bearer ' + loginStore.token
+    }
   })
     .then((response) => {
       console.log(response.data)

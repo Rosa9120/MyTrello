@@ -22,7 +22,6 @@
           <b-tab title="Ver" active>
             <b> Título: </b> {{titulo}} <br>
             <b> Descripcion: </b> {{descripcion}} <br>
-            <b> Creado por: </b> <br>
             <b> Fecha límite:</b> {{ fechaVencimiento }} <br>
           </b-tab>
           <b-tab title="Editar">
@@ -34,7 +33,7 @@
         </b-tabs>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-secondary" :id="'close-button-' + id"  data-bs-dismiss="modal">Cerrar</button>
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Borrar tarjeta</button>
           <button type="button" @click.prevent="guardarCambios" class="btn btn-primary">Guardar los cambios</button>
         </div>
@@ -49,6 +48,9 @@
 import { onMounted } from "@vue/runtime-core"
 import axios from "axios"
 import { ref } from "vue"
+import { useLoginStore } from '../stores/login';
+
+const loginStore = useLoginStore()
 
 const props = defineProps({
     titulo: {
@@ -121,13 +123,15 @@ const props = defineProps({
     axios.put('http://localhost:3000/tableros/' + props.tableroId + '/columnas/' + props.columnaId + '/tarjetas/' + props.id, {
       nombre: newTitulo.value,
       descripcion: newDescripcion.value,
-      fechaVencimiento: newFechaVencimiento.value
+      fechaVencimiento: newFechaVencimiento.value},{
+      headers: {
+      'Authorization': 'Bearer ' + loginStore.token
+      }
     }).then((response) => {
       titulo.value = response.data.tarjeta.nombre
       descripcion.value = response.data.tarjeta.descripcion
       fechaVencimiento.value = response.data.tarjeta.fechaVencimiento
-
-      const closeButton = document.getElementById('closeButton')
+      var closeButton = document.getElementById('close-button-' + props.id)
       closeButton.click()
     }).catch((error) => {
       console.log(error)

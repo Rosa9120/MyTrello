@@ -18,11 +18,14 @@ onMounted(async () => {
 
 <template>
     <div class="tableros">
-      <div class="buscador"> 
-        <b-form-input lass="mr-sm-2" style="width:40%" placeholder="Nombre del tablero"></b-form-input>
-        <b-button class="my-2 my-sm-0" type="submit">Buscar</b-button>
+      <div class="crud"> 
+        <div></div>
+        <div class="buscador"> 
+          <b-form-input lass="mr-sm-2" style="width:40%" placeholder="Nombre del tablero"></b-form-input>
+          <b-button class="my-2 my-sm-0" type="submit">Buscar</b-button>
+        </div>
+        <b-button class="my-2 my-sm-0" variant="success" data-bs-toggle="modal" data-bs-target="#exampleModal">Crear un tablero nuevo</b-button>
       </div>
-
       <b-card-group deck>
         <span v-for="tablero in tableros" :key="tablero.id"> 
           <div>
@@ -48,11 +51,40 @@ onMounted(async () => {
             </div>
           </span>
       </b-card-group>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"> Creación de un tablero </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body">
+            <b> Nombre: </b> <input type="text" required class="form-control" > <br>
+            <b> Descripcion: </b> <b-form-textarea class="form-control" > </b-form-textarea> <br>
+            <b> Imagen de fondo: </b> <input type="file" accept='image/*' class="form-control" > <br>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary">Guardar los cambios</button>
+          </div>
+        </div>
+      </div>
+      </div>
+
     </div>
 </template>
 
 
 <style lang="scss">
+
+html,body{
+    height:100%;
+    width: 100vw;
+}
+
 .tableros{
     margin: 5vh;
     display:flex;
@@ -64,6 +96,13 @@ onMounted(async () => {
     display:flex;
     flex-flow: row nowrap;
     justify-content: center;
+    flex-grow: 1;
+}
+
+.crud{
+  display:flex;
+  flex-flow: row nowrap;
+  width: 90%;
 }
 
 </style>

@@ -15,22 +15,22 @@
                 img-src="https://picsum.photos/600/300/?image=25"
                 img-top
                 tag="article"
-                style="max-width: 20rem;"
+                style="max-width: 20rem; min-height: 380px;"
                 class="mb-2"
               >
                 <b-card-title> {{ tablero.nombre }} </b-card-title>
                 <b-card-text>
-                  Tablero creado por QUIEN SEA
-                  o quiza la fecha de creacion
-                  o quiza meterle descripcion al tablero
-                  yo en la foto pondría la foto de background que tiene cada tablero. y si no tiene, pues un color aleatorio
+                {{ tablero.descripcion }}
                 </b-card-text>
-                    <div class="botones">
-                      <router-link :to="{ name: 'tablero', params: { id: tablero.id }}" custom v-slot="{ navigate }">
-                      <b-button @click="navigate" role="link" variant="primary"> Ver tablero </b-button>
-                    </router-link>
-                    <b-button data-bs-toggle="modal" :data-bs-target="'#exampleModal-' + tablero.id" variant="warning"> Gestionar </b-button>
-                </div>
+                <template #footer>
+                  <div class="botones" >
+                    <router-link :to="{ name: 'tablero', params: { id: tablero.id }}" custom v-slot="{ navigate }">
+                    <b-button @click="navigate" role="link" variant="primary"> Ver tablero </b-button>
+                  </router-link>
+                  <b-button data-bs-toggle="modal" :data-bs-target="'#exampleModal-' + tablero.id" variant="warning"> Gestionar </b-button>
+                  </div>
+                </template>
+                
 
               </b-card>
             </div>
@@ -45,14 +45,13 @@
                   </div>
 
                   <div class="modal-body">
-                    <b> Nombre: </b> <input type="text" required class="form-control" :value=tablero.nombre > <br>
-                    <b> Descripcion: </b> <b-form-textarea class="form-control" > </b-form-textarea> <br>
-                    <b> Imagen de fondo: </b> <input type="file" accept='image/*' class="form-control" > <br>
+                    <b> Nombre: </b> <input type="text" required class="form-control" v-model="nuevoNombreTableroEditar"> <br>
+                    <b> Descripcion: </b> <b-form-textarea class="form-control"  v-model="nuevaDescripcionTableroEditar"> </b-form-textarea> <br>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Borrar tablero</button>
-                    <button type="button" class="btn btn-primary">Guardar los cambios</button>
+                    <button type="button" class="btn btn-secondary" id="btn-close-modal-editar"  data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click.prevent="borrarTablero(tablero.id)" >Borrar tablero</button>
+                    <button type="button" class="btn btn-primary"  data-bs-dismiss="modal"  @click.prevent="editarTablero(tablero.id)"> Guardar los cambios</button>
                   </div>
                 </div>
           </div>
@@ -71,8 +70,7 @@
 
           <div class="modal-body">
             <b> Nombre: </b> <input type="text" v-model="nuevoNombreTablero" required class="form-control" > <br>
-            <b> Descripcion: </b> <b-form-textarea class="form-control" > </b-form-textarea> <br>
-            <b> Imagen de fondo: </b> <input type="file" accept='image/*' class="form-control" > <br>
+            <b> Descripcion: </b> <b-form-textarea v-model="nuevaDescripcionTablero" class="form-control" > </b-form-textarea> <br>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" id="btn-close-modal" data-bs-dismiss="modal">Cerrar</button>
@@ -94,12 +92,17 @@ import router from '../router';
 const tableros = ref([])
 
 const nuevoNombreTablero = ref('')
+const nuevaDescripcionTablero = ref('')
+const nuevoNombreTableroEditar = ref('')
+const nuevaDescripcionTableroEditar = ref('')
+
 
 const loginStore = useLoginStore()
 
 const crearTablero = async () => {
   await axios.post('http://localhost:3000/tableros/', {
-    nombre: nuevoNombreTablero.value
+    nombre: nuevoNombreTablero.value,
+    descripcion: nuevaDescripcionTablero.value
   }, {
     headers: {
       'Authorization': 'Bearer ' + loginStore.token
@@ -120,6 +123,57 @@ const crearTablero = async () => {
       console.log(error)
     })
 }
+
+const borrarTablero = async (id) => {
+  await axios.delete('http://localhost:3000/tableros/' + id, {
+    headers: {
+      'Authorization': 'Bearer ' + loginStore.token
+    }
+  })
+    .then(async (response) => {
+      await axios.get('http://localhost:3000/tableros/')   
+      .then((response) => {
+        tableros.value = response.data.tableros
+        const closeButton = document.getElementById('btn-close-modal')
+        closeButton.click()
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+const editarTablero = async (id) =>{
+  await axios.put('http://localhost:3000/tableros/' + id, {
+    nombre: nuevoNombreTableroEditar.value,
+    descripcion: nuevaDescripcionTableroEditar.value
+  }, {
+    headers: {
+      'Authorization': 'Bearer ' + loginStore.token
+    }
+  })
+    .then(async (response) => {
+      console.log("SE ENVIA BIEN")
+      await axios.get('http://localhost:3000/tableros/')   
+      .then((response) => {
+        nuevoNombreTableroEditar.value = ''
+        nuevaDescripcionTableroEditar.value = ''
+        tableros.value = response.data.tableros
+        const closeButton = document.getElementById('btn-close-modal-editar')
+        closeButton.click()
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
 
 const loaded = ref(false)
 

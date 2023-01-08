@@ -3,6 +3,7 @@
 import Columna from '/src/components/Columna.vue'
 import ColumnaVacia from '/src/components/ColumnaVacia.vue'
 
+import { useLoginStore } from '../stores/login';
 import { onMounted, ref } from 'vue'
 import axios from 'axios'
 
@@ -16,6 +17,8 @@ const props = defineProps({
     required: true
   }
 })
+
+const loginStore = useLoginStore()
 
 const updateColumns = (columna) => {
   columnas.value.push(columna)
@@ -33,7 +36,11 @@ const updateColumnsDelete = () => {
 
 onMounted(async () => {
 
-    await axios.get('http://localhost:3000/tableros/' + props.id)
+    await axios.get('http://localhost:3000/tableros/' + props.id, {
+    headers: {
+      'Authorization': 'Bearer ' + loginStore.token
+    }
+    })
     .then((response) => {
       nombre = response.data.tablero.nombre
       user_id.value = response.data.tablero.user_id

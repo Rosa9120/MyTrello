@@ -111,7 +111,11 @@ const crearTablero = async () => {
     }
   })
     .then(async (response) => {
-      await axios.get('http://localhost:3000/tableros/')    //EN EL FUTURO SERÁ USUARIO/TABLEROS PARA OBTENER LOS TABLEROS DEL USUARIO QUE HA INICIADO SEISON
+      await axios.get('http://localhost:3000/tableros/', {
+        headers: {
+          'Authorization': 'Bearer ' + loginStore.token
+        }
+      })   
       .then((response) => {
         tableros.value = response.data.tableros
         const closeButton = document.getElementById('btn-close-modal')
@@ -133,7 +137,11 @@ const borrarTablero = async (id) => {
     }
   })
     .then(async (response) => {
-      await axios.get('http://localhost:3000/tableros/')   
+      await axios.get('http://localhost:3000/tableros/', {
+        headers: {
+          'Authorization': 'Bearer ' + loginStore.token
+        }
+      })   
       .then((response) => {
         tableros.value = response.data.tableros
         const closeButton = document.getElementById('btn-close-modal')
@@ -159,7 +167,12 @@ const editarTablero = async (id) =>{
   })
     .then(async (response) => {
       console.log("SE ENVIA BIEN")
-      await axios.get('http://localhost:3000/tableros/')   
+      await axios.get('http://localhost:3000/tableros/', 
+      {
+        headers: {
+          'Authorization': 'Bearer ' + loginStore.token
+        }
+      })   
       .then((response) => {
         nuevoNombreTableroEditar.value = ''
         nuevaDescripcionTableroEditar.value = ''
@@ -190,7 +203,11 @@ onMounted(async () => {
 
   loaded.value = true
 
-  await axios.get('http://localhost:3000/tableros/')    //EN EL FUTURO SERÁ USUARIO/TABLEROS PARA OBTENER LOS TABLEROS DEL USUARIO QUE HA INICIADO SEISON
+  await axios.get('http://localhost:3000/tableros/', {
+    headers: {
+      'Authorization': 'Bearer ' + loginStore.token
+    }
+  })   
     .then((response) => {
       tableros.value = response.data.tableros
     })

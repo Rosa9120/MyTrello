@@ -11,7 +11,7 @@
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
           <b-nav-item>
-              <router-link class="custom-link" to="/about">Sobre nosotros</router-link>
+              <router-link class="custom-link" to="/about">Sobre la aplicación</router-link>
           </b-nav-item>
         </b-navbar-nav>
 

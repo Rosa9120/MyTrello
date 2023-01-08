@@ -21,6 +21,16 @@ const updateColumns = (columna) => {
   columnas.value.push(columna)
 }
 
+const updateColumnsDelete = () => {
+  axios.get('http://localhost:3000/tableros/' + props.id + '/columnas')
+        .then((response) => {
+        columnas.value = response.data.columnas
+        })
+        .catch((error) => {
+        console.log(error)
+        })
+}
+
 onMounted(async () => {
 
     await axios.get('http://localhost:3000/tableros/' + props.id)
@@ -51,7 +61,7 @@ onMounted(async () => {
 
   <div class="layout">
     <div class="cuadro">
-        <Columna v-for="columna in columnas" :key="columna.id" :titulo="columna.titulo" :id="columna.id" :tableroId="props.id" />
+        <Columna v-for="columna in columnas" v-on:deleteColumnEvent="updateColumnsDelete"  :key="columna.id" :titulo="columna.titulo" :id="columna.id" :tableroId="props.id" />
         <ColumnaVacia v-on:newColumnEvent="updateColumns" :tableroId="props.id"/>
     </div>
   </div>

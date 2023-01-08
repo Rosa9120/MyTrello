@@ -35,8 +35,10 @@ import { onMounted, ref } from 'vue'
 import axios from 'axios'
 import router from '../router';
 import { useLoginStore } from '../stores/login';
+import { defineEmits } from 'vue';
 
 const loginStore = useLoginStore()
+const emits = defineEmits(['deleteColumnEvent'])
 
 const props = defineProps({
   titulo: {
@@ -139,6 +141,7 @@ const borrarColumna = async(id) =>{
       await axios.get('http://localhost:3000/tableros/' + props.tableroId + '/columnas/')   
       .then((response) => {
         console.log(response.data)
+        emits('deleteColumnEvent')
       })
       .catch((error) => {
         console.log(error)

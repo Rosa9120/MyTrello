@@ -37,7 +37,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" :id="'close-button-' + id"  data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Borrar tarjeta</button>
+          <button type="button" @click.prevent="borrarTarjeta" class="btn btn-danger" data-bs-dismiss="modal">Borrar tarjeta</button>
           <button type="button" @click.prevent="guardarCambios" class="btn btn-primary">Guardar los cambios</button>
         </div>
       </div>
@@ -52,8 +52,10 @@ import { onMounted } from "@vue/runtime-core"
 import axios from "axios"
 import { ref } from "vue"
 import { useLoginStore } from '../stores/login';
+import { defineEmits } from "vue";
 
 const loginStore = useLoginStore()
+const emits = defineEmits(['actualizarTarjetas'])
 
 const props = defineProps({
     titulo: {
@@ -107,7 +109,20 @@ const props = defineProps({
     e.target.classList.remove('hide')
   }
 
-  
+  const borrarTarjeta = () => {
+    axios.delete('http://localhost:3000/tableros/' + props.tableroId + '/columnas/' + props.columnaId + '/tarjetas/' + props.id, {
+      headers: {
+        'Authorization': 'Bearer ' + loginStore.token
+      }
+    })
+      .then(response => {
+        console.log(response)
+        emits('actualizarTarjetas')
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
 
   const guardarCambios = () => {
     // Remove whitespace from the beginning and end of the string

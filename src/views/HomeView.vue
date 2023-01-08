@@ -41,18 +41,22 @@
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel"> Gestión de un tablero </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" id="close-editar" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
 
                   <b-form>
                     <div class="modal-body">
-                      <b> Nombre: </b> <b-form-input type="text" class="form-control" v-model="nuevoNombreTableroEditar" required> </b-form-input> <br>
+                      <b> Nombre: </b> <b-form-input type="text" class="form-control" v-model="nuevoNombreTableroEditar" required> </b-form-input> 
+                      <b-alert style="margin-top:15px;" v-model="showDismissibleAlertEditar" variant="danger" dismissible>
+                      El nombre del tablero no puede estar vacío!
+                      </b-alert>
+                      <br>
                       <b> Descripcion: </b> <b-form-textarea class="form-control"  v-model="nuevaDescripcionTableroEditar"> </b-form-textarea> <br>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" id="btn-close-modal-editar"  data-bs-dismiss="modal">Cerrar</button>
                       <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click.prevent="borrarTablero(tablero.id)" >Borrar tablero</button>
-                      <button class="btn btn-primary" type="submit" data-bs-dismiss="modal"  @click.prevent="editarTablero(tablero.id)"> Guardar los cambios</button>
+                      <button class="btn btn-primary" type="submit" @click.prevent="editarTablero(tablero.id)"> Guardar los cambios</button>
                     </div>
                   </b-form>
                 </div>
@@ -104,6 +108,7 @@ const nuevaDescripcionTableroEditar = ref('')
 const buscador = ref('')
 
 const showDismissibleAlert = ref(false)
+const showDismissibleAlertEditar = ref(false)
 
 const loginStore = useLoginStore()
 
@@ -175,6 +180,11 @@ const borrarTablero = async (id) => {
 }
 
 const editarTablero = async (id) =>{
+  if (nuevoNombreTableroEditar.value === '') {
+    showDismissibleAlertEditar.value = true
+    return
+  }
+  showDismissibleAlertEditar.value = false
   await axios.put('http://localhost:3000/tableros/' + id, {
     nombre: nuevoNombreTableroEditar.value,
     descripcion: nuevaDescripcionTableroEditar.value
@@ -194,7 +204,7 @@ const editarTablero = async (id) =>{
         nuevoNombreTableroEditar.value = ''
         nuevaDescripcionTableroEditar.value = ''
         tableros.value = response.data.tableros
-        const closeButton = document.getElementById('btn-close-modal-editar')
+        const closeButton = document.getElementById('close-editar')
         closeButton.click()
       })
       .catch((error) => {

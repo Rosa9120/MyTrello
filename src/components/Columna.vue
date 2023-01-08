@@ -20,7 +20,7 @@
     
     
     <div class="tarjetas" :id="'tarjetas-columna-' + id">
-      <Tarjeta v-for="tarjeta in tarjetas" :key="tarjeta.id" :titulo="tarjeta.nombre" :fechaVencimiento="tarjeta.fechaVencimiento" :descripcion="tarjeta.descripcion" :id="tarjeta.id" :columnaId="id" :tableroId="tableroId"/>
+      <Tarjeta v-for="tarjeta in tarjetas" :key="tarjeta.id" :titulo="tarjeta.nombre" :fechaVencimiento="tarjeta.fechaVencimiento" :descripcion="tarjeta.descripcion" :id="tarjeta.id" :columnaId="id" :tableroId="tableroId" v-on:actualizarTarjetas="actualizarTarjetas"/>
       <TarjetaVacia v-on:newTaskEvent="updateTasks" :columnaId="id" :tableroId="tableroId"/>
     </div>
 </div>
@@ -39,6 +39,21 @@ import { defineEmits } from 'vue';
 
 const loginStore = useLoginStore()
 const emits = defineEmits(['deleteColumnEvent'])
+
+const actualizarTarjetas = () => {
+  axios.get('http://localhost:3000/tableros/' + props.tableroId + '/columnas/' + props.id + '/tarjetas', {
+      headers: {
+      'Authorization': 'Bearer ' + loginStore.token
+      }
+    })
+    .then((response) => {
+      console.log(response.data)
+      tarjetas.value = response.data.tarjetas
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
 
 const props = defineProps({
   titulo: {

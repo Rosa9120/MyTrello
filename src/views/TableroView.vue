@@ -6,6 +6,7 @@ import ColumnaVacia from '/src/components/ColumnaVacia.vue'
 import { useLoginStore } from '../stores/login';
 import { onMounted, ref } from 'vue'
 import axios from 'axios'
+import router from '../router';
 
 const columnas = ref([])
 var nombre = ref('')
@@ -25,7 +26,12 @@ const updateColumns = (columna) => {
 }
 
 const updateColumnsDelete = () => {
-  axios.get('http://localhost:3000/tableros/' + props.id + '/columnas')
+  axios.get('http://localhost:3000/tableros/' + props.id + '/columnas', 
+      {
+          headers: {
+          'Authorization': 'Bearer ' + loginStore.token
+          }
+        })
         .then((response) => {
         columnas.value = response.data.columnas
         })
@@ -45,7 +51,12 @@ onMounted(async () => {
       nombre = response.data.tablero.nombre
       user_id.value = response.data.tablero.user_id
 
-      axios.get('http://localhost:3000/tableros/' + props.id + '/columnas')
+      axios.get('http://localhost:3000/tableros/' + props.id + '/columnas', 
+      {
+          headers: {
+          'Authorization': 'Bearer ' + loginStore.token
+          }
+        })
         .then((response) => {
         columnas.value = response.data.columnas
         })
@@ -55,6 +66,18 @@ onMounted(async () => {
     })
     .catch((error) => {
       console.log(error)
+        if (error.response) {
+          if (error.response.status == 403) {
+            router.push('/')
+          }
+        // Request made and server responded
+        } else if (error.request) {
+        // The request was made but no response was received
+        console.log(error.request);
+        } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+        }
     })
 
 })

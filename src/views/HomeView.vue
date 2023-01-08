@@ -3,7 +3,7 @@
       <div class="crud"> 
         <div></div>
         <div class="buscador"> 
-          <b-form-input lass="mr-sm-2" style="width:40%" placeholder="Nombre del tablero"></b-form-input>
+          <b-form-input v-model="buscador" lass="mr-sm-2" style="width:40%" placeholder="Nombre del tablero"></b-form-input>
           <b-button class="my-2 my-sm-0" type="submit">Buscar</b-button>
         </div>
         <b-button class="my-2 my-sm-0" variant="success" data-bs-toggle="modal" data-bs-target="#exampleModal">Crear un tablero nuevo</b-button>
@@ -71,7 +71,11 @@
           </div>
 
           <div class="modal-body">
-            <b> Nombre: </b> <input type="text" v-model="nuevoNombreTablero" required class="form-control" > <br>
+            <b> Nombre: </b> <input type="text" v-model="nuevoNombreTablero" required class="form-control" > 
+            <b-alert style="margin-top:15px;" v-model="showDismissibleAlert" variant="danger" dismissible>
+            El nombre del tablero no puede estar vacío!
+            </b-alert>
+            <br>
             <b> Descripcion: </b> <b-form-textarea v-model="nuevaDescripcionTablero" class="form-control" > </b-form-textarea> <br>
           </div>
           <div class="modal-footer">
@@ -86,7 +90,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import axios from 'axios'
 import { useLoginStore } from '../stores/login';
 import router from '../router';
@@ -97,11 +101,25 @@ const nuevoNombreTablero = ref('')
 const nuevaDescripcionTablero = ref('')
 const nuevoNombreTableroEditar = ref('')
 const nuevaDescripcionTableroEditar = ref('')
+const buscador = ref('')
 
+const showDismissibleAlert = ref(false)
 
 const loginStore = useLoginStore()
 
+const allTableros = ref(null)
+
+watch(buscador, (newValue, oldValue) => {
+  // filter tableros name by buscador
+  tableros.value = allTableros.value.filter(tablero => tablero.nombre.includes(newValue))
+})
+
 const crearTablero = async () => {
+  if (nuevoNombreTablero.value === '') {
+    showDismissibleAlert.value = true
+    return
+  }
+  showDismissibleAlert.value = false
   await axios.post('http://localhost:3000/tableros/', {
     nombre: nuevoNombreTablero.value,
     descripcion: nuevaDescripcionTablero.value
@@ -166,7 +184,6 @@ const editarTablero = async (id) =>{
     }
   })
     .then(async (response) => {
-      console.log("SE ENVIA BIEN")
       await axios.get('http://localhost:3000/tableros/', 
       {
         headers: {
@@ -210,6 +227,7 @@ onMounted(async () => {
   })   
     .then((response) => {
       tableros.value = response.data.tableros
+      allTableros.value = response.data.tableros
     })
     .catch((error) => {
       console.log(error)

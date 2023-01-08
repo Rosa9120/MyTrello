@@ -26,6 +26,9 @@
           </b-tab>
           <b-tab title="Editar">
             <b> Título: </b> <input type="text" class="form-control" v-model="newTitulo"> <br>
+            <b-alert v-model="showDismissibleAlert" variant="danger" dismissible>
+            El titulo no puede estar vacio! 
+            </b-alert>
             <b> Descripcion: </b> <b-form-textarea class="form-control" v-model="newDescripcion"> </b-form-textarea> <br>
             <b> Fecha límte: </b> <input type="date" class="form-control" v-model="newFechaVencimiento"> <br>
           </b-tab>
@@ -87,6 +90,8 @@ const props = defineProps({
   const newDescripcion = ref('')
   const newFechaVencimiento = ref('')
 
+  const showDismissibleAlert = ref(false)
+
   const dragStart = (e) => {
     e.dataTransfer.setData('text/plain', e.target.id)
 
@@ -102,6 +107,8 @@ const props = defineProps({
     e.target.classList.remove('hide')
   }
 
+  
+
   const guardarCambios = () => {
     // Remove whitespace from the beginning and end of the string
     newTitulo.value = newTitulo.value.trim()
@@ -115,6 +122,14 @@ const props = defineProps({
     } else {
       newFechaVencimiento.value = props.fechaVencimiento
     }
+
+    if (newTitulo.value == '') {
+      newTitulo.value = props.titulo
+      showDismissibleAlert.value = true
+      return
+    }
+
+    showDismissibleAlert.value = false
 
     if (newDescripcion.value == '') {
       newDescripcion.value = props.descripcion

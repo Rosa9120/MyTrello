@@ -101,8 +101,10 @@ const drop = (e) => {
   let id = e.dataTransfer.getData('text/plain')
   const draggedElement = document.getElementById(id)
   const lastElement = parentColumna.value.children[1].children[parentColumna.value.children[1].children.length - 1]
-  parentColumna.value.children[1].insertBefore(draggedElement, lastElement)
-  draggedElement.classList.remove('hide')
+  // remove dragged element from dom
+  draggedElement.remove()
+  // parentColumna.value.children[1].insertBefore(draggedElement, lastElement)
+  //draggedElement.classList.remove('hide')
   const columna_id = id.split('-')[2]
   const tarjeta_id = id.split('-')[3]
   axios.patch('http://localhost:3000/tableros/' + props.tableroId + '/columnas/' + columna_id + '/tarjetas/' + tarjeta_id, {
@@ -114,6 +116,18 @@ const drop = (e) => {
   })
     .then((response) => {
       console.log(response.data)
+      axios.get('http://localhost:3000/tableros/' + props.tableroId + '/columnas/' + props.id + '/tarjetas', {
+      headers: {
+      'Authorization': 'Bearer ' + loginStore.token
+      }
+    })
+    .then((response) => {
+      console.log(response.data)
+      tarjetas.value = response.data.tarjetas
+    })
+    .catch((error) => {
+      console.log(error)
+    })
     })
     .catch((error) => {
       console.log(error)
@@ -121,7 +135,11 @@ const drop = (e) => {
 }
 
 onMounted(async () => {
-  await axios.get('http://localhost:3000/tableros/' + props.tableroId + '/columnas/' + props.id + '/tarjetas')
+  await axios.get('http://localhost:3000/tableros/' + props.tableroId + '/columnas/' + props.id + '/tarjetas', {
+      headers: {
+      'Authorization': 'Bearer ' + loginStore.token
+      }
+    })
     .then((response) => {
       console.log(response.data)
       tarjetas.value = response.data.tarjetas
@@ -138,7 +156,12 @@ const borrarColumna = async(id) =>{
     }
   })
   .then(async (response) => {
-      await axios.get('http://localhost:3000/tableros/' + props.tableroId + '/columnas/')   
+      await axios.get('http://localhost:3000/tableros/' + props.tableroId + '/columnas/',
+      {
+      headers: {
+      'Authorization': 'Bearer ' + loginStore.token
+      }
+    })   
       .then((response) => {
         console.log(response.data)
         emits('deleteColumnEvent')

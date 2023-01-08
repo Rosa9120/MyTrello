@@ -1,13 +1,23 @@
+<!-- Vista principal situado en la ruta /
+      Muestra un conjunto de cards de bootstrap, cada uno representando un tablero del usuario 
+      Permite buscar entre estos tableros con el buscador
+      Permite crear un nuevo tablero con el botón de crear tablero. Este botón abre un modal con un formulario para crear el tablero. Se llama al método crearTablero() para crear el tablero en la base de datos y se actualiza la vista haciendo una petición GET de todos los tableros a la API
+      También permite gestionar cada tablero con el botón de gestionar. Se abre un modal en el que se puede borrar o editar el tablero. Se llama a la función correspondiente y se actualiza la pagina con una petición GET de todos los tableros a la API.
+      Por ultimo, cada card tiene un botón de ver que nos lleva a la vista de ese tablero en concreto. Se pasa el id del tablero como parámetro en la ruta.
+      -->
 <template>
     <div class="tableros" v-if="loaded">
       <div class="crud"> 
         <div></div>
+        <!-- input y boton para buscar -->
         <div class="buscador"> 
           <b-form-input v-model="buscador" lass="mr-sm-2" style="width:40%" placeholder="Nombre del tablero"></b-form-input>
           <b-button class="my-2 my-sm-0" type="submit">Buscar</b-button>
         </div>
+        <!-- boton para crear un tablero nuevo -->
         <b-button class="my-2 my-sm-0" variant="success" data-bs-toggle="modal" data-bs-target="#exampleModal">Crear un tablero nuevo</b-button>
       </div>
+      <!-- card deck de bootstrap para mostrar todos los tableros -->
       <b-card-group deck>
         <span v-for="tablero in tableros" :key="tablero.id"> 
           <div>
@@ -31,10 +41,9 @@
                   </div>
                 </template>
                 
-
               </b-card>
             </div>
-
+            <!-- modal para editar y borrar un tablero -->
             <div class="modal fade" :id="'exampleModal-' + tablero.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
               <div class="modal-dialog">
@@ -47,6 +56,7 @@
                   <b-form>
                     <div class="modal-body">
                       <b> Nombre: </b> <b-form-input type="text" class="form-control" v-model="nuevoNombreTableroEditar" required> </b-form-input> 
+                      <!-- validacion -->
                       <b-alert style="margin-top:15px;" v-model="showDismissibleAlertEditar" variant="danger" dismissible>
                       El nombre del tablero no puede estar vacío!
                       </b-alert>
@@ -65,6 +75,7 @@
           </span>
       </b-card-group>
 
+      <!-- modal para crear un tablero -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
       <div class="modal-dialog">
@@ -76,6 +87,7 @@
 
           <div class="modal-body">
             <b> Nombre: </b> <input type="text" v-model="nuevoNombreTablero" required class="form-control" > 
+            <!-- validacion -->
             <b-alert style="margin-top:15px;" v-model="showDismissibleAlert" variant="danger" dismissible>
             El nombre del tablero no puede estar vacío!
             </b-alert>
@@ -114,6 +126,7 @@ const loginStore = useLoginStore()
 
 const allTableros = ref(null)
 
+//buscador
 watch(buscador, (newValue, oldValue) => {
   // filter tableros name by buscador
   tableros.value = allTableros.value.filter(tablero => tablero.nombre.includes(newValue))
@@ -125,6 +138,7 @@ const crearTablero = async () => {
     return
   }
   showDismissibleAlert.value = false
+  //peticion post para crear el tablero
   await axios.post('http://localhost:3000/tableros/', {
     nombre: nuevoNombreTablero.value,
     descripcion: nuevaDescripcionTablero.value
@@ -134,12 +148,14 @@ const crearTablero = async () => {
     }
   })
     .then(async (response) => {
+      //si se crea correctamente, se hace una peticion get para actualizar la pagina
       await axios.get('http://localhost:3000/tableros/', {
         headers: {
           'Authorization': 'Bearer ' + loginStore.token
         }
       })   
       .then((response) => {
+        //se cierra el modal y se actualizan los tableros
         tableros.value = response.data.tableros
         const closeButton = document.getElementById('btn-close-modal')
         closeButton.click()
@@ -153,19 +169,23 @@ const crearTablero = async () => {
     })
 }
 
+
 const borrarTablero = async (id) => {
+  //se hace la peticion delete para borrar el tablero
   await axios.delete('http://localhost:3000/tableros/' + id, {
     headers: {
       'Authorization': 'Bearer ' + loginStore.token
     }
   })
     .then(async (response) => {
+      //si se borra correctamente, se hace una peticion get para actualizar la pagina
       await axios.get('http://localhost:3000/tableros/', {
         headers: {
           'Authorization': 'Bearer ' + loginStore.token
         }
       })   
       .then((response) => {
+        //se actualizan los tableros y se cierra el modal
         tableros.value = response.data.tableros
         const closeButton = document.getElementById('btn-close-modal')
         closeButton.click()
@@ -185,6 +205,7 @@ const editarTablero = async (id) =>{
     return
   }
   showDismissibleAlertEditar.value = false
+  //se hace la peticion put para editar el tablero
   await axios.put('http://localhost:3000/tableros/' + id, {
     nombre: nuevoNombreTableroEditar.value,
     descripcion: nuevaDescripcionTableroEditar.value
@@ -194,6 +215,7 @@ const editarTablero = async (id) =>{
     }
   })
     .then(async (response) => {
+      //si se edita correctamente, se hace una peticion get para actualizar la pagina
       await axios.get('http://localhost:3000/tableros/', 
       {
         headers: {
@@ -201,6 +223,7 @@ const editarTablero = async (id) =>{
         }
       })   
       .then((response) => {
+        //se actualizan los tableros y se cierra el modal
         nuevoNombreTableroEditar.value = ''
         nuevaDescripcionTableroEditar.value = ''
         tableros.value = response.data.tableros
@@ -229,7 +252,7 @@ onMounted(async () => {
   }
 
   loaded.value = true
-
+  // se hace la peticion get para obtener los tableros
   await axios.get('http://localhost:3000/tableros/', {
     headers: {
       'Authorization': 'Bearer ' + loginStore.token

@@ -1,3 +1,9 @@
+<!-- Componente que representa una columna vacía
+      props: el id del tablero.
+      Funciones: 
+      - newColumn hace una petición post para crear una columna. Si se crea correctamente, se emite el evento newColumnEvent para que el tablero actualice sus columnas
+      Eventos emitidos: 
+      - newColumnEvent -->
 <script setup>
 
 import { ref, onMounted } from 'vue'
@@ -36,6 +42,7 @@ const newColumn = (e) => {
       nuevaColumna.value = response.data.columna
       console.log(nuevaColumna.value)
       newColumnText.value = ''
+      // se emite un evento para que el tablero actualice sus columnas
       emits('newColumnEvent', nuevaColumna.value)
     })
     .catch((error) => {
@@ -49,6 +56,8 @@ const newColumn = (e) => {
 <template>
     <div class="columna">
       <div class="tarjetas">
+        <!-- Una columna vacía se representa por un input de texto, tal y como se hace en trello -->
+        <!-- Para hacer submit se debe dar a enter, como en Trello -->
         <b-form-input
             id="inline-form-input-name"
             class="mb-2 me-sm-2 mb-sm-0"

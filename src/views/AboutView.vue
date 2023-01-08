@@ -1,9 +1,15 @@
+
+<!-- Vista con el mismo texto que LEEME.txt en la ruta /about-->
 <template>
     <div class="about">
       <h1> Práctica 4 </h1>
       <h2> Hecha por Ilya Slyusarchuk y Rosa María Rodríguez </h2> 
       <h3> Aplicaciones distribuidas en internet </h3>
-      Se trata de una aplicación web que permite crear tableros de tareas, con columnas y tarjetas. Las tarjetas se pueden mover de columna arrastrando y soltando. La gestión de las tarjetas se hace haciendo click en los tres puntos al lado de su titulo.
+      Se trata de una aplicación web que permite crear tableros de tareas, con columnas y tarjetas. Las tarjetas se pueden mover de columna arrastrando y soltando. La gestión de las tarjetas se hace dando click en los tres puntos al lado de su titulo.
+      <br>
+      Se usan cinco vistas: LoginView, RegisterView, TableroView, HomeView y AboutView. 
+      <br>
+      También hacemos uso de cinco componentes: Columna, ColumnaVacia, Navbar, Tarjeta y TarjetaVacia.
 
       <h4> Cambios introducidos en el servidor: </h4>
 

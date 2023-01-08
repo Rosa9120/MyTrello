@@ -1,8 +1,9 @@
-
+<!-- Componente que representa una barra de navegación que se usa en todas las páginas. Permite ir a la página principal y la página de información, así como el registro, el login, y cerrar sesión -->
 <template>
   <div>
     <b-navbar toggleable="lg" type="dark" variant="primary">
       <b-navbar-brand class="custom-navbar">
+        <!-- Link a la página principal -->
           <router-link class="custom-link" to="/">MyTrello</router-link>
       </b-navbar-brand>
 
@@ -15,8 +16,8 @@
           </b-nav-item>
         </b-navbar-nav>
 
-      <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
+        <!-- si hay una sesión de usuario -->
           <b-nav-item-dropdown right v-if="user">
             <!-- Using 'button-content' slot -->
             <template #button-content>
@@ -24,6 +25,7 @@
             </template>
             <b-dropdown-item @click="logout">Cerrar sesión</b-dropdown-item>
           </b-nav-item-dropdown>
+          <!-- Si no hay una sesión iniciada -->
           <b-nav-item v-if="!user">
               <router-link class="custom-link" to="/login">Inicia sesion</router-link>
               <router-link class="custom-link" style="margin-left: 20px;" to="/registro">Registrate</router-link>

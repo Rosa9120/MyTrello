@@ -1,12 +1,27 @@
+<!-- 
+  Este componente es el encargado de mostrar una tarjeta en el tablero.
+  Cada tarjeta se puede coger y arrastrar para moverla de columna. Se puede gestionar cada tarjeta dándole click en el botón ⠇. Entonces se podrá borrar o editar sus datos con un modal.
+  Props: id, titulo, descripción, fechaVencimiento, columnaId y tableroId
+  Eventos emitidos:
+    - actualizarTarjetas: se emite cuando se borra una tarjeta para actualizar las tarjetas de la columna
+  Funciones: 
+    - dragStart: para que la tarjeta se pueda arrastrar y desaparezca de la columna original.
+    - dragEnd: para que la tarjeta aparezca en la columna destino.
+    - borrarTarjeta: hace la petición delete para borrar la tarjeta y emite el evento actualizarTarjetas para que su columna actualice sus tarjetas.
+    - guardarCambios. Hace la petición put para editar los campos que se hayan cambiado de la tarjeta. 
+
+ -->
 <template>
   <div class="cuadro-tarjeta" :id="'cuadro-tarjeta-' + columnaId + '-' + id" draggable="true" @dragstart="dragStart" @dragend="dragEnd">
     <div class="interior">
       <h1>{{ titulo }}</h1>
+      <!-- Boton para abrir un modal que permitirá editar o borrar la tarjeta -->
       <button class="botones-braile" type="button" data-bs-toggle="modal" :data-bs-target="'#exampleModal-' + id ">
         ⠇
       </button>
     </div>
 
+    <!-- Modal para gestionar la tarjeta  -->
     <div class="modal fade" :id="'exampleModal-' + id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
     <div class="modal-dialog">
@@ -17,7 +32,7 @@
         </div>
 
         <div class="modal-body">
-
+          <!-- usamos dos tabs diferentes: una para ver los datos y otro para editarlos -->
           <b-tabs content-class="mt-3">
           <b-tab title="Ver" active>
             <b> Título: </b> {{titulo}} <br>
@@ -26,6 +41,7 @@
           </b-tab>
           <b-tab title="Editar">
             <b> Título: </b> <input type="text" class="form-control" v-model="newTitulo"> <br>
+            <!-- validacion -->
             <b-alert v-model="showDismissibleAlert" variant="danger" dismissible>
             El titulo no puede estar vacio! 
             </b-alert>
@@ -35,6 +51,7 @@
 
         </b-tabs>
         </div>
+        <!-- Todos estos botones cierran el modal y llaman a borrarTarjeta o a guardarCambios -->
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" :id="'close-button-' + id"  data-bs-dismiss="modal">Cerrar</button>
           <button type="button" @click.prevent="borrarTarjeta" class="btn btn-danger" data-bs-dismiss="modal">Borrar tarjeta</button>

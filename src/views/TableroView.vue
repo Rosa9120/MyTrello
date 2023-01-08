@@ -1,3 +1,11 @@
+<!-- Vista para cada tablero. Se accede con la url tablero/:id
+      Props: el id del tablero determinado
+      Funciones: 
+      - updateColumns para añadir una columna al array de columnas.
+      - updateColumnsDelete para actualizar las columnas haciendo una petición get a la api.<template>
+      - onMounted para hacer una petición get a la api para obtener el nombre del tablero y las columnas que tiene. Además, comprueba si el tablero le pertenece a la sesión que está intentando acceder. Si no le pertenece, se redirige a la vista de sus tableros.
+      Se recorre un for para mostrar las columnas que tiene el tablero. Al final se muestra una columna vacía para añadir una nueva columna. Cada columna puede emitir el evento deleteColumnEvent, que se recibe en el componente padre y se ejecuta la funcion updateColumnsDelete para actualizar las columnas. Por otro lado, la columna vacía puede emitir el evento addColumnEvent, que se recibe en el componente padre y se ejecuta la funcion updateColumns para añadir una columna al array de columnas.
+      -->
 <script setup>
 
 import Columna from '/src/components/Columna.vue'

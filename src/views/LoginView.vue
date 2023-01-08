@@ -1,3 +1,6 @@
+<!-- Vista con el formulario de login en la ruta /login 
+    Una vez se rellenan los datos, se hace una peticion post a la api para obtener el token,
+    que se guarda en localStorage. En la aplicacion usaremos pinia para acceder al localStorage-->
 <template>
     <div id="login">
         <h3> Formulario de inicio de sesión </h3>

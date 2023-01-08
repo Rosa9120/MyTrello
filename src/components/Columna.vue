@@ -1,3 +1,20 @@
+<!-- Componente que representa una columna.  
+      Props: titulo, id y tableroId. 
+      Eventos generados:
+      - deleteColumnEvent: se emite cuando se borra la columna.
+      Eventos procesados:
+      - actualizarTarjetas cuando se borra una tarjeta
+      - updateTasks cuando se añade una tarjeta
+      Funciones: 
+      - actualizarTarjetas para actualizar las tarjetas haciendo una petición get a la api.
+      - updateTasks para añadir una tarjeta al array de tarjetas cuando se crea una tarjeta.
+      - borrarColumna para borrar la columna haciendo una petición delete a la api.
+      - dragEnter para cambiar el color de fondo de la columna cuando se entra en ella y además añade el borde.
+      - dragOver para evitar que se quite el color de fonde y el borde de la columna sobre la que está el cursor.
+      - dragLeave para cambiar el color de fondo de la columna cuando se sale de ella y además quita el borde.
+      - drop para cambiar el color de fondo de la columna cuando se suelta el elemento y además quita el borde. También hace la petición patch para cambiar la columna de la tarjeta.
+      -onMounted hace una petición get para obtener las tarjetas de la columna.
+     -->
 <template>
   <div class="columna" :id="'columna-' + id" @dragenter="dragEnter" @dragover="dragOver" @dragleave="dragLeave" @drop="drop">
     <div class="header-columna">
@@ -8,24 +25,17 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
           <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
         </svg>
-        <!-- EL QUE MÁS TE GUSTE -->
-        <!-- MÁS AQUÍ: https://icons.getbootstrap.com/ -->
-        <!-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-        </svg> -->
 
       </button>
     </div>
     
-    
+    <!-- Bucle que muestra las tarjetas de la columna y una tarjeta vacía al final -->
     <div class="tarjetas" :id="'tarjetas-columna-' + id">
       <Tarjeta v-for="tarjeta in tarjetas" :key="tarjeta.id" :titulo="tarjeta.nombre" :fechaVencimiento="tarjeta.fechaVencimiento" :descripcion="tarjeta.descripcion" :id="tarjeta.id" :columnaId="id" :tableroId="tableroId" v-on:actualizarTarjetas="actualizarTarjetas"/>
       <TarjetaVacia v-on:newTaskEvent="updateTasks" :columnaId="id" :tableroId="tableroId"/>
     </div>
 </div>
 </template>
-
 
 <script setup>
 import Tarjeta from '/src/components/Tarjeta.vue'
@@ -40,6 +50,7 @@ import { defineEmits } from 'vue';
 const loginStore = useLoginStore()
 const emits = defineEmits(['deleteColumnEvent'])
 
+// hace una petición get cuando se borra una tarjeta, para actualizar las tarjetas de la columna
 const actualizarTarjetas = () => {
   axios.get('http://localhost:3000/tableros/' + props.tableroId + '/columnas/' + props.id + '/tarjetas', {
       headers: {
@@ -76,6 +87,7 @@ const contadorElementos = ref(0)
 
 const tarjetas = ref([])
 
+// añade la tarjeta al array de tarjetas de la columna
 const updateTasks = (tarjeta) => {
   tarjetas.value.push(tarjeta)
 }
